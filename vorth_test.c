@@ -11,7 +11,7 @@ static inline int equiv_f32(float x, float y) {
 }
 
 static void test_f16(void) {
-    _Float16 stack[8 * V] __attribute__((aligned(16)));
+    _Float16 stack[8 * V] __attribute__((aligned(sizeof(_Float16) * V)));
     void* sp = stack;
 
     sp = vorth_imm_f16(sp, 1);
@@ -62,7 +62,7 @@ static void test_f16(void) {
 }
 
 static void test_f32(void) {
-    float stack[8 * V] __attribute__((aligned(32)));
+    float stack[8 * V] __attribute__((aligned(sizeof(float) * V)));
     void* sp = stack;
 
     sp = vorth_imm_f32(sp, 1);
