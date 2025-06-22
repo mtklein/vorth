@@ -102,17 +102,13 @@ void* vorth_mad_f32(void* sp) {
 void* vorth_pop_f16(void* sp, _Float16 out[V]) {
     F16* stack = sp;
     F16 x = *--stack;
-    for (int i = 0; i < V; i++) {
-        out[i] = x[i];
-    }
+    __builtin_memcpy(out, &x, sizeof x);
     return stack;
 }
 
 void* vorth_pop_f32(void* sp, float out[V]) {
     F32* stack = sp;
     F32 x = *--stack;
-    for (int i = 0; i < V; i++) {
-        out[i] = x[i];
-    }
+    __builtin_memcpy(out, &x, sizeof x);
     return stack;
 }
