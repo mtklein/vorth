@@ -2,6 +2,10 @@
 #include <assert.h>
 #include <math.h>
 
+#define V 8
+typedef _Float16 F16 __attribute__((vector_size(sizeof(_Float16) * V)));
+typedef float    F32 __attribute__((vector_size(sizeof(float) * V)));
+
 static void test_f16(void) {
     F16 stack[8];
     void* sp = stack;

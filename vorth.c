@@ -1,5 +1,12 @@
 #include "vorth.h"
 
+#define V 8
+
+typedef _Float16 F16 __attribute__((vector_size(sizeof(_Float16) * V)));
+typedef float    F32 __attribute__((vector_size(sizeof(float) * V)));
+
+#define splat(T, x) ((T){0} + 1) * (x)
+
 void* vorth_imm_f16(void* sp, _Float16 x) {
     F16* stack = sp;
     *stack++ = splat(F16, x);
