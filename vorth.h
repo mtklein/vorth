@@ -1,5 +1,12 @@
 #pragma once
 
+#define V 8
+
+typedef _Float16 F16 __attribute__((vector_size(sizeof(_Float16) * V)));
+typedef float    F32 __attribute__((vector_size(sizeof(float) * V)));
+
+#define splat(T, x) ((T){0} + 1) * (x)
+
 // vorth is a SIMT-style vectorized Forth-style language.  Its priorities:
 //   - correctness
 //   - efficient memory access
