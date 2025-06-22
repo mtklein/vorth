@@ -1,0 +1,3 @@
+mode  = lto
+flags = $lto
+subninja build/rules
