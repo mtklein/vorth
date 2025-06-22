@@ -1,7 +1,5 @@
 #include "vorth.h"
 
-#define V 8
-
 typedef _Float16 F16 __attribute__((vector_size(sizeof(_Float16) * V)));
 typedef float    F32 __attribute__((vector_size(sizeof(float) * V)));
 
@@ -98,5 +96,23 @@ void* vorth_mad_f32(void* sp) {
     F32 b = *--stack;
     F32 a = *--stack;
     *stack++ = a * b + c;
+    return stack;
+}
+
+void* vorth_pop_f16(void* sp, _Float16 out[V]) {
+    F16* stack = sp;
+    F16 x = *--stack;
+    for (int i = 0; i < V; i++) {
+        out[i] = x[i];
+    }
+    return stack;
+}
+
+void* vorth_pop_f32(void* sp, float out[V]) {
+    F32* stack = sp;
+    F32 x = *--stack;
+    for (int i = 0; i < V; i++) {
+        out[i] = x[i];
+    }
     return stack;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#define V 8
+
 // vorth is a SIMT-style vectorized Forth-style language.  Its priorities:
 //   - correctness
 //   - efficient memory access
@@ -27,3 +29,6 @@ void* vorth_sub_f32(void*);
 void* vorth_mul_f32(void*);
 void* vorth_div_f32(void*);
 void* vorth_mad_f32(void*);
+
+void* vorth_pop_f16(void*, _Float16[V]);
+void* vorth_pop_f32(void*, float[V]);
