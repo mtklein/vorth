@@ -16,35 +16,35 @@ typedef u32 i32;
 
 #define splat(T, x) ((T){0} + 1) * (x)
 
-#define DEFINE_IMM(T, suf, ctype)                  \
-    void* vorth_imm_##suf(void* sp, ctype x) {     \
+#define DEFINE_IMM(T, ctype)                       \
+    void* vorth_imm_##T(void* sp, ctype x) {       \
         T* stack = sp;                             \
         *stack++ = splat(T, x);                    \
         return stack;                              \
     }
 
-#define DEFINE_ARITH(T, suf)                       \
-    void* vorth_add_##suf(void* sp) {              \
+#define DEFINE_ARITH(T)                            \
+    void* vorth_add_##T(void* sp) {                \
         T* stack = sp;                             \
         T const b = *--stack, a = *--stack;        \
         *stack++ = a + b;                          \
         return stack;                              \
     }                                              \
-    void* vorth_sub_##suf(void* sp) {              \
+    void* vorth_sub_##T(void* sp) {                \
         T* stack = sp;                             \
         T const b = *--stack, a = *--stack;        \
         *stack++ = a - b;                          \
         return stack;                              \
     }                                              \
-    void* vorth_mul_##suf(void* sp) {              \
+    void* vorth_mul_##T(void* sp) {                \
         T* stack = sp;                             \
         T const b = *--stack, a = *--stack;        \
         *stack++ = a * b;                          \
         return stack;                              \
     }
 
-#define DEFINE_POP(T, suf, ctype)                  \
-    void* vorth_pop_##suf(void* sp, ctype out[V]) { \
+#define DEFINE_POP(T, ctype)                       \
+    void* vorth_pop_##T(void* sp, ctype out[V]) {  \
         T* stack = sp;                             \
         T const x = *--stack;                      \
         __builtin_memcpy(out, &x, sizeof x);       \
@@ -52,26 +52,26 @@ typedef u32 i32;
     }
 
 
-#define DEFINE_BITWISE(T, suf)                      \
-    void* vorth_and_##suf(void* sp) {               \
+#define DEFINE_BITWISE(T)                           \
+    void* vorth_and_##T(void* sp) {                 \
         T* stack = sp;                              \
         T const b = *--stack, a = *--stack;         \
         *stack++ = a & b;                           \
         return stack;                               \
     }                                               \
-    void* vorth_or_##suf(void* sp) {                \
+    void* vorth_or_##T(void* sp) {                  \
         T* stack = sp;                              \
         T const b = *--stack, a = *--stack;         \
         *stack++ = a | b;                           \
         return stack;                               \
     }                                               \
-    void* vorth_xor_##suf(void* sp) {               \
+    void* vorth_xor_##T(void* sp) {                 \
         T* stack = sp;                              \
         T const b = *--stack, a = *--stack;         \
         *stack++ = a ^ b;                           \
         return stack;                               \
     }                                               \
-    void* vorth_not_##suf(void* sp) {               \
+    void* vorth_not_##T(void* sp) {                 \
         T* stack = sp;                              \
         T const a = *--stack;                       \
         *stack++ = ~a;                              \
@@ -79,16 +79,16 @@ typedef u32 i32;
     }
 
 
-#define DEFINE_DIV(T, suf)                          \
-    void* vorth_div_##suf(void* sp) {              \
+#define DEFINE_DIV(T)                              \
+    void* vorth_div_##T(void* sp) {                \
         T* stack = sp;                             \
         T const b = *--stack, a = *--stack;        \
         *stack++ = a / b;                          \
         return stack;                              \
     }
 
-#define DEFINE_MAD(T, suf)                          \
-    void* vorth_mad_##suf(void* sp) {              \
+#define DEFINE_MAD(T)                               \
+    void* vorth_mad_##T(void* sp) {                \
         T* stack = sp;                             \
         T const c = *--stack,                      \
                 b = *--stack,                      \
@@ -97,36 +97,36 @@ typedef u32 i32;
         return stack;                              \
     }
 
-DEFINE_IMM(f16, f16, _Float16)
-DEFINE_POP(f16, f16, _Float16)
-DEFINE_ARITH(f16, f16)
-DEFINE_DIV(f16, f16)
-DEFINE_MAD(f16, f16)
+DEFINE_IMM(f16, _Float16)
+DEFINE_POP(f16, _Float16)
+DEFINE_ARITH(f16)
+DEFINE_DIV(f16)
+DEFINE_MAD(f16)
 
-DEFINE_IMM(f32, f32, float)
-DEFINE_POP(f32, f32, float)
-DEFINE_ARITH(f32, f32)
-DEFINE_DIV(f32, f32)
-DEFINE_MAD(f32, f32)
+DEFINE_IMM(f32, float)
+DEFINE_POP(f32, float)
+DEFINE_ARITH(f32)
+DEFINE_DIV(f32)
+DEFINE_MAD(f32)
 
-DEFINE_IMM(s8,  s8,  signed char)
-DEFINE_POP(s8,  s8,  signed char)
-DEFINE_IMM(s16, s16, short)
-DEFINE_POP(s16, s16, short)
-DEFINE_IMM(s32, s32, int)
-DEFINE_POP(s32, s32, int)
+DEFINE_IMM(s8,  signed char)
+DEFINE_POP(s8,  signed char)
+DEFINE_IMM(s16, short)
+DEFINE_POP(s16, short)
+DEFINE_IMM(s32, int)
+DEFINE_POP(s32, int)
 
-DEFINE_IMM(u8,  u8,  unsigned char)
-DEFINE_POP(u8,  u8,  unsigned char)
-DEFINE_IMM(u16, u16, unsigned short)
-DEFINE_POP(u16, u16, unsigned short)
-DEFINE_IMM(u32, u32, unsigned int)
-DEFINE_POP(u32, u32, unsigned int)
+DEFINE_IMM(u8,  unsigned char)
+DEFINE_POP(u8,  unsigned char)
+DEFINE_IMM(u16, unsigned short)
+DEFINE_POP(u16, unsigned short)
+DEFINE_IMM(u32, unsigned int)
+DEFINE_POP(u32, unsigned int)
 
-DEFINE_ARITH(i8,  i8)
-DEFINE_ARITH(i16, i16)
-DEFINE_ARITH(i32, i32)
+DEFINE_ARITH(i8)
+DEFINE_ARITH(i16)
+DEFINE_ARITH(i32)
 
-DEFINE_BITWISE(i8,  i8)
-DEFINE_BITWISE(i16, i16)
-DEFINE_BITWISE(i32, i32)
+DEFINE_BITWISE(i8)
+DEFINE_BITWISE(i16)
+DEFINE_BITWISE(i32)
