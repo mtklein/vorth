@@ -10,6 +10,28 @@ static inline int equiv_f32(float x, float y) {
     return (x <= y && y <= x) || (x != x && y != y);
 }
 
+static void test_s32(void) {
+    int stack[8 * V] __attribute__((aligned(sizeof(int) * V)));
+    void* sp = stack;
+
+    sp = vorth_imm_s32(sp, 1);
+    sp = vorth_imm_s32(sp, 2);
+    sp = vorth_add_i32(sp);
+    int res[V];
+    sp = vorth_pop_s32(sp, res);
+    for (int i = 0; i < V; i++) {
+        assert(res[i] == 3);
+    }
+
+    sp = stack;
+    sp = vorth_imm_s32(sp, 0);
+    sp = vorth_not_i32(sp);
+    sp = vorth_pop_s32(sp, res);
+    for (int i = 0; i < V; i++) {
+        assert(res[i] == ~0);
+    }
+}
+
 static void test_f16(void) {
     _Float16 stack[8 * V] __attribute__((aligned(sizeof(_Float16) * V)));
     void* sp = stack;
@@ -113,6 +135,7 @@ static void test_f32(void) {
 }
 
 int main(void) {
+    test_s32();
     test_f16();
     test_f32();
     return 0;
