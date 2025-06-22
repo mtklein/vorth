@@ -1,3 +1,4 @@
-mode  = san
-flags = $san
+mode    = san
+cflags  = -fsanitize=address,integer,undefined
+ldflags = -fsanitize=address,integer,undefined
 subninja build/rules

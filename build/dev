@@ -1,3 +1,4 @@
-mode  = dev
-flags = $dev
+mode    = dev
+cflags  = -Og
+ldflags = -Og
 subninja build/rules
