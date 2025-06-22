@@ -5,47 +5,12 @@ warn = -Weverything $
     -Wno-declaration-after-statement $
     -Wno-poison-system-directories $
     -Wno-switch-default $
-    -Wno-unsafe-buffer-usage $
+    -Wno-unsafe-buffer-usage
 
 dev = -Og
 lto = $dev -flto
 san = -fsanitize=address,integer,undefined
 
-rule compile
-    command = $cc -g -Werror $warn -fcolor-diagnostics $flags -MD -MF $out.d $
-                  -c $in -o $out
-    depfile = $out.d
-    deps    = gcc
-
-rule link
-    command = $cc $in $flags -o $out
-
-rule test
-    command = ./$in $args > $out
-
-build out/dev/vorth.o:       compile vorth.c
-    flags = $dev
-build out/dev/vorth_test.o:  compile vorth_test.c
-    flags = $dev
-build out/dev/vorth_test:    link out/dev/vorth_test.o out/dev/vorth.o
-    flags = $dev
-build out/dev/vorth_test.ok: test out/dev/vorth_test
-    flags = $dev
-
-build out/lto/vorth.o:       compile vorth.c
-    flags = $lto
-build out/lto/vorth_test.o:  compile vorth_test.c
-    flags = $lto
-build out/lto/vorth_test:    link out/lto/vorth_test.o out/lto/vorth.o
-    flags = $lto
-build out/lto/vorth_test.ok: test out/lto/vorth_test
-    flags = $lto
-
-build out/san/vorth.o:       compile vorth.c
-    flags = $san
-build out/san/vorth_test.o:  compile vorth_test.c
-    flags = $san
-build out/san/vorth_test:    link out/san/vorth_test.o out/san/vorth.o
-    flags = $san
-build out/san/vorth_test.ok: test out/san/vorth_test
-    flags = $san
+subninja build/dev
+subninja build/lto
+subninja build/san

@@ -1,0 +1,3 @@
+mode  = san
+flags = $san
+subninja build/rules
