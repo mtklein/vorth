@@ -9,7 +9,7 @@ rule compile
     deps    = gcc
 
 rule link
-    command = $cc $in $ldflags -o $out
+    command = if [ $$(uname) = Linux ]; then $cc $in $ldflags -fuse-ld=lld -lm -o $out; else $cc $in $ldflags -o $out; fi
 
 rule test
     command = ./$in $args > $out
