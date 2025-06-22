@@ -26,19 +26,19 @@ typedef u32 i32;
 #define DEFINE_ARITH(T, suf)                       \
     void* vorth_add_##suf(void* sp) {              \
         T* stack = sp;                             \
-        const T b = *--stack, a = *--stack;        \
+        T const b = *--stack, a = *--stack;        \
         *stack++ = a + b;                          \
         return stack;                              \
     }                                              \
     void* vorth_sub_##suf(void* sp) {              \
         T* stack = sp;                             \
-        const T b = *--stack, a = *--stack;        \
+        T const b = *--stack, a = *--stack;        \
         *stack++ = a - b;                          \
         return stack;                              \
     }                                              \
     void* vorth_mul_##suf(void* sp) {              \
         T* stack = sp;                             \
-        const T b = *--stack, a = *--stack;        \
+        T const b = *--stack, a = *--stack;        \
         *stack++ = a * b;                          \
         return stack;                              \
     }
@@ -46,7 +46,7 @@ typedef u32 i32;
 #define DEFINE_POP(T, suf, ctype)                  \
     void* vorth_pop_##suf(void* sp, ctype out[V]) { \
         T* stack = sp;                             \
-        const T x = *--stack;                      \
+        T const x = *--stack;                      \
         __builtin_memcpy(out, &x, sizeof x);       \
         return stack;                              \
     }
@@ -55,25 +55,25 @@ typedef u32 i32;
 #define DEFINE_BITWISE(T, suf)                      \
     void* vorth_and_##suf(void* sp) {               \
         T* stack = sp;                              \
-        const T b = *--stack, a = *--stack;         \
+        T const b = *--stack, a = *--stack;         \
         *stack++ = a & b;                           \
         return stack;                               \
     }                                               \
     void* vorth_or_##suf(void* sp) {                \
         T* stack = sp;                              \
-        const T b = *--stack, a = *--stack;         \
+        T const b = *--stack, a = *--stack;         \
         *stack++ = a | b;                           \
         return stack;                               \
     }                                               \
     void* vorth_xor_##suf(void* sp) {               \
         T* stack = sp;                              \
-        const T b = *--stack, a = *--stack;         \
+        T const b = *--stack, a = *--stack;         \
         *stack++ = a ^ b;                           \
         return stack;                               \
     }                                               \
     void* vorth_not_##suf(void* sp) {               \
         T* stack = sp;                              \
-        const T a = *--stack;                       \
+        T const a = *--stack;                       \
         *stack++ = ~a;                              \
         return stack;                               \
     }
@@ -82,7 +82,7 @@ typedef u32 i32;
 #define DEFINE_DIV(T, suf)                          \
     void* vorth_div_##suf(void* sp) {              \
         T* stack = sp;                             \
-        const T b = *--stack, a = *--stack;        \
+        T const b = *--stack, a = *--stack;        \
         *stack++ = a / b;                          \
         return stack;                              \
     }
@@ -90,9 +90,9 @@ typedef u32 i32;
 #define DEFINE_MAD(T, suf)                          \
     void* vorth_mad_##suf(void* sp) {              \
         T* stack = sp;                             \
-        const T c = *--stack,                      \
-                  b = *--stack,                    \
-                  a = *--stack;                    \
+        T const c = *--stack,                      \
+                b = *--stack,                      \
+                a = *--stack;                      \
         *stack++ = a * b + c;                      \
         return stack;                              \
     }
