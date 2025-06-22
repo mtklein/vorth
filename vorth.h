@@ -1,6 +1,4 @@
 #pragma once
-
-
 // vorth is a SIMT-style vectorized Forth-style language.  Its priorities:
 //   - correctness
 //   - efficient memory access
