@@ -1,24 +1,20 @@
-# Common build rules. Expects $mode and $flags.
+# Common build rules. Expects $mode, $cflags and $ldflags.
 
 outdir = $builddir/$mode
 
 rule compile
-    command = $cc -g -Werror $warn -fcolor-diagnostics $flags -MD -MF $out.d $
+    command = $cc -g -Werror $warn -fcolor-diagnostics $cflags -MD -MF $out.d $
                   -c $in -o $out
     depfile = $out.d
     deps    = gcc
 
 rule link
-    command = $cc $in $flags -o $out
+    command = $cc $in $ldflags -o $out
 
 rule test
     command = ./$in $args > $out
 
 build $outdir/vorth.o:       compile vorth.c
-    flags = $flags
 build $outdir/vorth_test.o:  compile vorth_test.c
-    flags = $flags
 build $outdir/vorth_test:    link $outdir/vorth_test.o $outdir/vorth.o
-    flags = $flags
 build $outdir/vorth_test.ok: test $outdir/vorth_test
-    flags = $flags

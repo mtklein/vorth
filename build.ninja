@@ -7,10 +7,6 @@ warn = -Weverything $
     -Wno-switch-default $
     -Wno-unsafe-buffer-usage
 
-dev = -Og
-lto = $dev -flto -fuse-ld=lld -Qunused-arguments
-san = -fsanitize=address,integer,undefined
-
 subninja build/dev
 subninja build/lto
 subninja build/san

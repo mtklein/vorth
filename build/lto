@@ -1,3 +1,4 @@
-mode  = lto
-flags = $lto
+mode    = lto
+cflags  = -Og -flto
+ldflags = -Og -flto -fuse-ld=lld
 subninja build/rules
