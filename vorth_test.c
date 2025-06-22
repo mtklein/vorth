@@ -1,8 +1,21 @@
 #include "vorth.h"
 #include <assert.h>
-#include <math.h>
 
 #define V 8
+
+static inline int equiv_f16(_Float16 x, _Float16 y) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
+    return (x <= y && y <= x) || (x != x && y != y);
+#pragma clang diagnostic pop
+}
+
+static inline int equiv_f32(float x, float y) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
+    return (x <= y && y <= x) || (x != x && y != y);
+#pragma clang diagnostic pop
+}
 
 static void test_f16(void) {
     _Float16 stack[8 * V] __attribute__((aligned(16)));
@@ -13,7 +26,7 @@ static void test_f16(void) {
     sp = vorth_add_f16(sp);
     _Float16* res = (_Float16*)sp - V;
     for (int i = 0; i < V; i++) {
-        assert(fabs((double)res[i] - 3.0) < 0.001);
+        assert(equiv_f16(res[i], (_Float16)3.0));
     }
 
     sp = stack;
@@ -22,7 +35,7 @@ static void test_f16(void) {
     sp = vorth_sub_f16(sp);
     res = (_Float16*)sp - V;
     for (int i = 0; i < V; i++) {
-        assert(fabs((double)res[i] - 2.0) < 0.001);
+        assert(equiv_f16(res[i], (_Float16)2.0));
     }
 
     sp = stack;
@@ -31,7 +44,7 @@ static void test_f16(void) {
     sp = vorth_mul_f16(sp);
     res = (_Float16*)sp - V;
     for (int i = 0; i < V; i++) {
-        assert(fabs((double)res[i] - 6.0) < 0.001);
+        assert(equiv_f16(res[i], (_Float16)6.0));
     }
 
     sp = stack;
@@ -40,7 +53,7 @@ static void test_f16(void) {
     sp = vorth_div_f16(sp);
     res = (_Float16*)sp - V;
     for (int i = 0; i < V; i++) {
-        assert(fabs((double)res[i] - 3.0) < 0.001);
+        assert(equiv_f16(res[i], (_Float16)3.0));
     }
 
     sp = stack;
@@ -50,7 +63,7 @@ static void test_f16(void) {
     sp = vorth_mad_f16(sp);
     res = (_Float16*)sp - V;
     for (int i = 0; i < V; i++) {
-        assert(fabs((double)res[i] - 10.0) < 0.001);
+        assert(equiv_f16(res[i], (_Float16)10.0));
     }
 }
 
@@ -63,7 +76,7 @@ static void test_f32(void) {
     sp = vorth_add_f32(sp);
     float* res = (float*)sp - V;
     for (int i = 0; i < V; i++) {
-        assert(fabsf(res[i] - 3.0f) < 0.001f);
+        assert(equiv_f32(res[i], 3.0f));
     }
 
     sp = stack;
@@ -72,7 +85,7 @@ static void test_f32(void) {
     sp = vorth_sub_f32(sp);
     res = (float*)sp - V;
     for (int i = 0; i < V; i++) {
-        assert(fabsf(res[i] - 2.0f) < 0.001f);
+        assert(equiv_f32(res[i], 2.0f));
     }
 
     sp = stack;
@@ -81,7 +94,7 @@ static void test_f32(void) {
     sp = vorth_mul_f32(sp);
     res = (float*)sp - V;
     for (int i = 0; i < V; i++) {
-        assert(fabsf(res[i] - 6.0f) < 0.001f);
+        assert(equiv_f32(res[i], 6.0f));
     }
 
     sp = stack;
@@ -90,7 +103,7 @@ static void test_f32(void) {
     sp = vorth_div_f32(sp);
     res = (float*)sp - V;
     for (int i = 0; i < V; i++) {
-        assert(fabsf(res[i] - 3.0f) < 0.001f);
+        assert(equiv_f32(res[i], 3.0f));
     }
 
     sp = stack;
@@ -100,7 +113,7 @@ static void test_f32(void) {
     sp = vorth_mad_f32(sp);
     res = (float*)sp - V;
     for (int i = 0; i < V; i++) {
-        assert(fabsf(res[i] - 10.0f) < 0.001f);
+        assert(equiv_f32(res[i], 10.0f));
     }
 }
 
