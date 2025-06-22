@@ -8,7 +8,7 @@ warn = -Weverything $
     -Wno-unsafe-buffer-usage
 
 dev = -Og
-lto = $dev -flto
+lto = $dev -flto -fuse-ld=lld -Qunused-arguments
 san = -fsanitize=address,integer,undefined
 
 subninja build/dev
