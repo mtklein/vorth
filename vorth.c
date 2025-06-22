@@ -51,6 +51,40 @@ typedef u32 i32;
         return stack;                              \
     }
 
+#define DEFINE_LOAD(T, ctype)                        \
+    void* vorth_load_##T(void* sp, const ctype* src) {\
+        T* stack = sp;                              \
+        T x;                                        \
+        __builtin_memcpy(&x, src, sizeof x);        \
+        *stack++ = x;                               \
+        return stack;                               \
+    }
+
+#define DEFINE_LOAD_MASK(T, ctype)                                   \
+    void* vorth_load_mask_##T(void* sp, const ctype* src, vorth_mask mask) {\
+        T* stack = sp;                                               \
+        ctype tmp[V] = {0};                                          \
+        for (int i = 0; i < V; i++)                                  \
+            if (mask & (1u << i))                                     \
+                tmp[i] = src[i];                                     \
+        T x;                                                         \
+        __builtin_memcpy(&x, tmp, sizeof x);                         \
+        *stack++ = x;                                                \
+        return stack;                                                \
+    }
+
+#define DEFINE_STORE_MASK(T, ctype)                               \
+    void* vorth_store_mask_##T(void* sp, ctype* dst, vorth_mask mask) {\
+        T* stack = sp;                                              \
+        T const x = *--stack;                                       \
+        ctype tmp[V];                                               \
+        __builtin_memcpy(tmp, &x, sizeof x);                        \
+        for (int i = 0; i < V; i++)                                 \
+            if (mask & (1u << i))                                   \
+                dst[i] = tmp[i];                                    \
+        return stack;                                               \
+    }
+
 
 #define DEFINE_BITWISE(T)                           \
     void* vorth_and_##T(void* sp) {                 \
@@ -99,29 +133,53 @@ typedef u32 i32;
 
 DEFINE_IMM(f16, _Float16)
 DEFINE_POP(f16, _Float16)
+DEFINE_LOAD(f16, _Float16)
+DEFINE_LOAD_MASK(f16, _Float16)
+DEFINE_STORE_MASK(f16, _Float16)
 DEFINE_ARITH(f16)
 DEFINE_DIV(f16)
 DEFINE_MAD(f16)
 
 DEFINE_IMM(f32, float)
 DEFINE_POP(f32, float)
+DEFINE_LOAD(f32, float)
+DEFINE_LOAD_MASK(f32, float)
+DEFINE_STORE_MASK(f32, float)
 DEFINE_ARITH(f32)
 DEFINE_DIV(f32)
 DEFINE_MAD(f32)
 
 DEFINE_IMM(s8,  signed char)
 DEFINE_POP(s8,  signed char)
+DEFINE_LOAD(s8, signed char)
+DEFINE_LOAD_MASK(s8, signed char)
+DEFINE_STORE_MASK(s8, signed char)
 DEFINE_IMM(s16, short)
 DEFINE_POP(s16, short)
+DEFINE_LOAD(s16, short)
+DEFINE_LOAD_MASK(s16, short)
+DEFINE_STORE_MASK(s16, short)
 DEFINE_IMM(s32, int)
 DEFINE_POP(s32, int)
+DEFINE_LOAD(s32, int)
+DEFINE_LOAD_MASK(s32, int)
+DEFINE_STORE_MASK(s32, int)
 
 DEFINE_IMM(u8,  unsigned char)
 DEFINE_POP(u8,  unsigned char)
+DEFINE_LOAD(u8, unsigned char)
+DEFINE_LOAD_MASK(u8, unsigned char)
+DEFINE_STORE_MASK(u8, unsigned char)
 DEFINE_IMM(u16, unsigned short)
 DEFINE_POP(u16, unsigned short)
+DEFINE_LOAD(u16, unsigned short)
+DEFINE_LOAD_MASK(u16, unsigned short)
+DEFINE_STORE_MASK(u16, unsigned short)
 DEFINE_IMM(u32, unsigned int)
 DEFINE_POP(u32, unsigned int)
+DEFINE_LOAD(u32, unsigned int)
+DEFINE_LOAD_MASK(u32, unsigned int)
+DEFINE_STORE_MASK(u32, unsigned int)
 
 DEFINE_ARITH(i8)
 DEFINE_ARITH(i16)

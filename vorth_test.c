@@ -172,11 +172,35 @@ static void test_f32(void) {
     }
 }
 
+static void test_mask(void) {
+    int stack[8 * V] __attribute__((aligned(sizeof(int) * V)));
+    void* sp = stack;
+
+    int src[V];
+    for (int i = 0; i < V; i++)
+        src[i] = i + 1;
+
+    sp = vorth_load_s32(sp, src);
+    int dst[V] = {0};
+    sp = vorth_store_mask_s32(sp, dst, (1u << V) - 1);
+    for (int i = 0; i < V; i++)
+        assert(dst[i] == src[i]);
+
+    sp = vorth_load_mask_s32(sp, src, (1u << (V - 1)) - 1);
+    int dst2[V] = {0};
+    sp = vorth_store_mask_s32(sp, dst2, (1u << (V - 1)) - 1);
+    for (int i = 0; i < V - 1; i++)
+        assert(dst2[i] == src[i]);
+    for (int i = V - 1; i < V; i++)
+        assert(dst2[i] == 0);
+}
+
 int main(void) {
     test_i8();
     test_i16();
     test_i32();
     test_f16();
     test_f32();
+    test_mask();
     return 0;
 }
