@@ -1,4 +1,4 @@
 mode    = dev
 cflags  = -Og
-ldflags = -Og
+ldflags =
 subninja build/rules
