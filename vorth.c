@@ -47,9 +47,9 @@ void* vorth_div_f16(void* sp) {
 
 void* vorth_mad_f16(void* sp) {
     F16* stack = sp;
-    F16 c = *--stack;
-    F16 b = *--stack;
-    F16 a = *--stack;
+    F16 const c = *--stack,
+              b = *--stack,
+              a = *--stack;
     *stack++ = a * b + c;
     return stack;
 }
